@@ -90,9 +90,29 @@ public static void removeTrainingCaddy(Map<Integer, ArrayList<String>> trainingL
 	
 public static void printCaddy(Map<Integer, ArrayList<String>> trainingChoices) {
 		
-		System.out.println(trainingChoices);
+	if (! trainingChoices.isEmpty()) {
+		
+		System.out.println(
+				"--------------------------------------------------------------------------------------------------");
+		System.out.printf("%5s | %-15s | %-10s | %-40s |%-10s |%-5s |", "REF.", "COURS", "NB JOURS", "DESCRIPTION",
+				"PRIX", "QTE");
+		System.out.println();
+		System.out.println(
+				"---------------------------------------------------------------------------------------------------");
+
+		for (HashMap.Entry<Integer, ArrayList<String>> m : trainingChoices.entrySet()) {
+
+			System.out.format("%5s | %-15s | %-10s | %-40s |%-10s |%-5s |", m.getKey(), m.getValue().get(0),
+					m.getValue().get(1), m.getValue().get(2), m.getValue().get(3), m.getValue().get(4));
+			System.out.println();
+			System.out.println(
+					"--------------------------------------------------------------------------------------------------");
+		}
+	}
 	
+	else System.out.println("Votre panier est vide");
 }
+
 
 	
 public static void menu() {
@@ -166,12 +186,12 @@ public static void menu() {
 		
 		System.out.println("Choisissez une option");
 		
-		//while (scan.hasNextInt() == false) // ignore la saisie tant qu'il ne s'agit pas d'un entier
-         //   scan.next();
+		while (scan.hasNextInt() == false) // ignore la saisie tant qu'il ne s'agit pas d'un entier
+        scan.next();
 		
 		nbMenu = scan.nextInt();//l'utilisateur saisit un nombre correspondant au choix du menu
 		
-		//int id=trainingChoices.size()+1;
+	
 		switch (nbMenu) {
 		
 	
