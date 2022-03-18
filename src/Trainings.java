@@ -19,18 +19,18 @@ public class Trainings {
 	 */
 	public static void displayTable(Map<Integer, ArrayList<String>> trainingList) {
 		
-		System.out.println("Voici la liste de formations actuellement disponibles");
-		System.out.println("-------------------------------------------------------------------------------------");
-	    System.out.printf("%5s | %-15s | %-10s | %-40s |%-10s |", "REF.","COURS", "NB JOURS", "DESCRIPTION", "PRIX");
+		System.out.println("Voici la liste de formations actuelles");
+		System.out.println("---------------------------------------------------------------------------------------------------------");
+	    System.out.printf("%5s | %-15s | %-10s | %-40s |%-10s |%-15s |", "REF.","COURS", "NB JOURS", "DESCRIPTION", "PRIX","DISPONIBILITE");
 	    System.out.println();
-	    System.out.println("-------------------------------------------------------------------------------------");
+	    System.out.println("-----------------------------------------------------------------------------------------------------------");
 	    
 		for (int i=1;i<trainingList.size()+1;i++) {
 			
-			        System.out.format("%5s | %-15s | %-10s | %-40s |%-10s |", i , trainingList.get(i).get(0),trainingList.get(i).get(1),trainingList.get(i).get(2),
-			        		trainingList.get(i).get(3));
+			        System.out.format("%5s | %-15s | %-10s | %-40s |%-10s |%-15s |", i , trainingList.get(i).get(0),trainingList.get(i).get(1),trainingList.get(i).get(2),
+			        		trainingList.get(i).get(3),trainingList.get(i).get(4));
 			        System.out.println();
-			        System.out.println("------------------------------------------------------------------------------------");
+			        System.out.println("-------------------------------------------------------------------------------------------------------");
 		}
 		}
 	
@@ -47,20 +47,28 @@ public class Trainings {
 		System.out.println("Indiquez l'identifiant de la formation que vous voulez ajouter au panier");
 		int idTraining = scan.nextInt();
 		
-		if (trainingList.get(idTraining)!=null) {	//si la formation existe
+		
+		
+		if (trainingList.get(idTraining)!=null) {//si la formation existe
+			
+			if(trainingList.get(idTraining).get(4).equals("disponible")) {//si la formation est disponible
+				
 			if(trainingChoices.get(idTraining)==null) { //si la formation n'existe pas dans notre panier
  				trainingChoices.put(idTraining, trainingList.get(idTraining) );	
 				trainingChoices.get(idTraining).add("1");		
 				System.out.println("Formation ajoutée: "+ idTraining + " " + trainingList.get(idTraining));
 			}
 			else { //s'il y a déjà une ou plusieurs formations dans le panier
-				int qte = Integer.parseInt(trainingChoices.get(idTraining).get(4));//On récupère la quantité qu'il y a dans la case 4 en entier
-				trainingChoices.get(idTraining).set(4,String.valueOf(++qte));//On l'incrémente et la transforme en string
+				int qte = Integer.parseInt(trainingChoices.get(idTraining).get(5));//On récupère la quantité qu'il y a dans la case 5 en entier
+				trainingChoices.get(idTraining).set(5,String.valueOf(++qte));//On l'incrémente et la transforme en string
 				
 				System.out.println("formation ajoutée --->" + trainingChoices.get(idTraining)); 
 			}
-		}		
+		}	
+			else System.out.println("Cette formation est indisponible à l'achat");
+		}
 		else System.out.println("Cette formation n'existe pas");
+		
 		}
 	
 	
@@ -74,16 +82,17 @@ public static void removeTrainingCaddy(Map<Integer, ArrayList<String>> trainingL
 		
 		System.out.println("Indiquez l'identifiant de la formation que vous voulez supprimer du panier");
 		int idTraining = scan.nextInt();
+	
 		
 		if (trainingChoices.get(idTraining)!=null) {
 			//S'il y a une seule formation dans le panier, la supprimer
-			if (trainingChoices.get(idTraining).get(4)=="1") {
+			if (trainingChoices.get(idTraining).get(5)=="1") {
 				trainingChoices.remove(idTraining, trainingList.get(idTraining) );
 				System.out.println("Formation supprimée du panier");
 				}
 			else { 
-				int qte = Integer.parseInt(trainingChoices.get(idTraining).get(4));//On récupère la quantité qu'il y a dans la case 4 et la transforme en entier
-			trainingChoices.get(idTraining).set(4,String.valueOf(--qte));//On la décrémente et la transforme en string
+				int qte = Integer.parseInt(trainingChoices.get(idTraining).get(5));//On récupère la quantité qu'il y a dans la case 4 et la transforme en entier
+			trainingChoices.get(idTraining).set(5,String.valueOf(--qte));//On la décrémente et la transforme en string
 			System.out.println("Formation supprimée du panier");
 		}
 		}
@@ -103,20 +112,20 @@ public static void printCaddy(Map<Integer, ArrayList<String>> trainingChoices) {
 	if (! trainingChoices.isEmpty()) {
 		
 		System.out.println(
-				"--------------------------------------------------------------------------------------------------");
-		System.out.printf("%5s | %-15s | %-10s | %-40s |%-10s |%-5s |", "REF.", "COURS", "NB JOURS", "DESCRIPTION",
-				"PRIX", "QTE");
+				"-------------------------------------------------------------------------------------------------------------");
+		System.out.printf("%5s | %-15s | %-10s | %-40s |%-10s |%-15s |%-10s |", "REF.", "COURS", "NB JOURS", "DESCRIPTION",
+				"PRIX", "DISPONIBILITE", "QTE");
 		System.out.println();
 		System.out.println(
-				"---------------------------------------------------------------------------------------------------");
+				"---------------------------------------------------------------------------------------------------------------");
 
 		for (HashMap.Entry<Integer, ArrayList<String>> m : trainingChoices.entrySet()) {
 
-			System.out.format("%5s | %-15s | %-10s | %-40s |%-10s |%-5s |", m.getKey(), m.getValue().get(0),
-					m.getValue().get(1), m.getValue().get(2), m.getValue().get(3), m.getValue().get(4));
+			System.out.format("%5s | %-15s | %-10s | %-40s |%-10s |%-15s |%-10s |", m.getKey(), m.getValue().get(0),
+					m.getValue().get(1), m.getValue().get(2), m.getValue().get(3), m.getValue().get(4), m.getValue().get(5));
 			System.out.println();
 			System.out.println(
-					"--------------------------------------------------------------------------------------------------");
+					"-------------------------------------------------------------------------------------------------------------");
 		}
 	}
 	
@@ -135,26 +144,25 @@ public static void printCaddyWithTotal(Map<Integer, ArrayList<String>> trainingC
 		
 		for (HashMap.Entry<Integer, ArrayList<String>> m : trainingChoices.entrySet()) {
 			prix= Integer.parseInt(m.getValue().get(3)); 
-			int qty= Integer.parseInt(m.getValue().get(4));
+			int qty= Integer.parseInt(m.getValue().get(5));
 			total=total+(prix*qty);
 			
 		}
-			
 		System.out.println(
-				"--------------------------------------------------------------------------------------------------");
-		System.out.printf("%5s | %-15s | %-10s | %-40s |%-10s |%-5s |", "REF.", "COURS", "NB JOURS", "DESCRIPTION",
-				"PRIX", "QTE");
+				"------------------------------------------------------------------------------------------------------------");
+		System.out.printf("%5s | %-15s | %-10s | %-40s |%-10s |%-15s |%-10s |", "REF.", "COURS", "NB JOURS", "DESCRIPTION",
+				"PRIX", "DISPO", "QTE");
 		System.out.println();
 		System.out.println(
-				"---------------------------------------------------------------------------------------------------");
+				"--------------------------------------------------------------------------------------------------------------");
 
 		for (HashMap.Entry<Integer, ArrayList<String>> m : trainingChoices.entrySet()) {
 
-			System.out.format("%5s | %-15s | %-10s | %-40s |%-10s |%-5s |", m.getKey(), m.getValue().get(0),
-					m.getValue().get(1), m.getValue().get(2), m.getValue().get(3), m.getValue().get(4));
+			System.out.format("%5s | %-15s | %-10s | %-40s |%-10s |%-15s |%-10s |", m.getKey(), m.getValue().get(0),
+					m.getValue().get(1), m.getValue().get(2), m.getValue().get(3), m.getValue().get(4), m.getValue().get(5));
 			System.out.println();
 			System.out.println(
-					"--------------------------------------------------------------------------------------------------");
+					"-------------------------------------------------------------------------------------------------------------");
 		}
 		
 		System.out.println("Le prix total de votre panier est de "+ total + "€");
@@ -223,7 +231,8 @@ public static void menu() {
 	training1.add("20");
 	training1.add("Java SE 8");
 	training1.add("3000");
-
+	training1.add("disponible");
+	
 	trainings.put(1, training1);
 	
 	
@@ -232,6 +241,7 @@ public static void menu() {
 	training2.add("20");
 	training2.add("Exceptions, Fichiers, JDBC, threads");
 	training2.add("5000");
+	training2.add("disponible");
 
 	trainings.put(2, training2);
 	
@@ -240,6 +250,7 @@ public static void menu() {
 	training3.add("20");
 	training3.add("Spring Core");
 	training3.add("5000");
+	training3.add("disponible");
 
 	trainings.put(3, training3);
 	
@@ -248,6 +259,7 @@ public static void menu() {
 	training4.add("15");
 	training4.add("Symphony");
 	training4.add("2500");
+	training4.add("disponible");
 
 	trainings.put(4, training4);
 	
@@ -257,8 +269,19 @@ public static void menu() {
 	training5.add("20");
 	training5.add("DoNet Core");
 	training5.add("5000");
+	training5.add("disponible");
 
 	trainings.put(5, training5);
+	
+	
+	ArrayList<String> training6 = new ArrayList<String>();
+	training6.add("Angular");
+	training6.add("20");
+	training6.add("Angular 8");
+	training6.add("5000");
+	training6.add("indisponible");
+
+	trainings.put(6, training6);
 	
 	Map<Integer, ArrayList<String>> trainingChoices= new HashMap <Integer, ArrayList<String>>();
 	
@@ -271,7 +294,7 @@ public static void menu() {
 	menu();
 	do { 
 		
-		System.out.println("Choisissez une option");
+		System.out.println("Choisissez une option, saisir un chiffre");
 		
 		while (scan.hasNextInt() == false) // ignore la saisie tant qu'il ne s'agit pas d'un entier
         scan.next();
