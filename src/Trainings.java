@@ -15,18 +15,15 @@ public class Trainings {
 	public static final Scanner scan=new Scanner(System.in);
 	
 	/**Cette méthode permet d'afficher les formations existantes sous forme de tableau
-	 * @param trainingList liste des formations
+	 * @param trainingList - liste des formations
 	 */
 	public static void displayTable(Map<Integer, ArrayList<String>> trainingList) {
 		
-		System.out.println("       Bonjour et Bienvenue dans mon application FullTrainings");
-		System.out.println("Nous allons vous proposer une liste de formations actuellement disponibles");
+		System.out.println("Voici la liste de formations actuellement disponibles");
 		System.out.println("-------------------------------------------------------------------------------------");
 	    System.out.printf("%5s | %-15s | %-10s | %-40s |%-10s |", "REF.","COURS", "NB JOURS", "DESCRIPTION", "PRIX");
 	    System.out.println();
 	    System.out.println("-------------------------------------------------------------------------------------");
-	    
-	   
 	    
 		for (int i=1;i<trainingList.size()+1;i++) {
 			
@@ -35,8 +32,13 @@ public class Trainings {
 			        System.out.println();
 			        System.out.println("------------------------------------------------------------------------------------");
 		}
-		
 		}
+	
+	/**Cette méthode permet d'ajouter une formation au panier
+	 * 
+	 * @param trainingList - liste des formations
+	 * @param trainingChoices - Panier de formations choisies
+	 */
 	
 	public static void addTrainingCaddy(Map<Integer, ArrayList<String>> trainingList,Map<Integer, ArrayList<String>> trainingChoices) {
 		
@@ -51,20 +53,22 @@ public class Trainings {
 				trainingChoices.get(idTraining).add("1");		
 				System.out.println("Formation ajoutée: "+ idTraining + " " + trainingList.get(idTraining));
 			}
-			else {
-				int qte = Integer.parseInt(trainingChoices.get(idTraining).get(4));//On récupère la quantité qu'il y a dans la case 4 (le 1)
-				//System.out.println(">>>" + trainingChoices.get(idTraining).get(4));
+			else { //s'il y a déjà une ou plusieurs formations dans le panier
+				int qte = Integer.parseInt(trainingChoices.get(idTraining).get(4));//On récupère la quantité qu'il y a dans la case 4 en entier
 				trainingChoices.get(idTraining).set(4,String.valueOf(++qte));//On l'incrémente et la transforme en string
 				
-				System.out.println("--->" + trainingChoices.get(idTraining)); 
+				System.out.println("formation ajoutée --->" + trainingChoices.get(idTraining)); 
 			}
-		}
-		
-	
-		
+		}		
 		else System.out.println("Cette formation n'existe pas");
-		
 		}
+	
+	
+	/** Cette méthode permet de supprimer une formation du panier.
+	 * 
+	 * @param trainingList - liste des formations
+	 * @param trainingChoices - Panier de formations choisies
+	 */
 	
 public static void removeTrainingCaddy(Map<Integer, ArrayList<String>> trainingList,Map<Integer, ArrayList<String>> trainingChoices) {
 		
@@ -72,21 +76,27 @@ public static void removeTrainingCaddy(Map<Integer, ArrayList<String>> trainingL
 		int idTraining = scan.nextInt();
 		
 		if (trainingChoices.get(idTraining)!=null) {
-			if (trainingChoices.get(idTraining).get(4)=="1")
+			//S'il y a une seule formation dans le panier, la supprimer
+			if (trainingChoices.get(idTraining).get(4)=="1") {
 				trainingChoices.remove(idTraining, trainingList.get(idTraining) );
-			else {
+				System.out.println("Formation supprimée du panier");
+				}
+			else { 
 				int qte = Integer.parseInt(trainingChoices.get(idTraining).get(4));//On récupère la quantité qu'il y a dans la case 4 et la transforme en entier
-			
-			//System.out.println(">>>" + trainingChoices.get(idTraining).get(4));
 			trainingChoices.get(idTraining).set(4,String.valueOf(--qte));//On la décrémente et la transforme en string
-			
-			System.out.println("--->" + trainingChoices.get(idTraining)); 
+			System.out.println("Formation supprimée du panier");
 		}
 		}
 		
 		else System.out.println("Cette formation n'existe pas");
 		
 		}
+
+
+/** Cette méthode permet d'afficher le panier de formations choisies par l'utilisateur, sans le prix total
+ * 
+ * @param trainingChoices - le panier de formations choisies
+ */
 	
 public static void printCaddy(Map<Integer, ArrayList<String>> trainingChoices) {
 		
@@ -113,18 +123,93 @@ public static void printCaddy(Map<Integer, ArrayList<String>> trainingChoices) {
 	else System.out.println("Votre panier est vide");
 }
 
+/** Cette méthode permet d'afficher le paniercomplet avec un message précisant le total de la commande
+ * 
+ * @param trainingChoices - le panier de formations choisies
+ */
 
+public static void printCaddyWithTotal(Map<Integer, ArrayList<String>> trainingChoices) {
+	int total = 0;
+	int prix=0;
+	if (! trainingChoices.isEmpty()) {
+		
+		for (HashMap.Entry<Integer, ArrayList<String>> m : trainingChoices.entrySet()) {
+			prix= Integer.parseInt(m.getValue().get(3)); 
+			int qty= Integer.parseInt(m.getValue().get(4));
+			total=total+(prix*qty);
+			
+		}
+			
+		System.out.println(
+				"--------------------------------------------------------------------------------------------------");
+		System.out.printf("%5s | %-15s | %-10s | %-40s |%-10s |%-5s |", "REF.", "COURS", "NB JOURS", "DESCRIPTION",
+				"PRIX", "QTE");
+		System.out.println();
+		System.out.println(
+				"---------------------------------------------------------------------------------------------------");
+
+		for (HashMap.Entry<Integer, ArrayList<String>> m : trainingChoices.entrySet()) {
+
+			System.out.format("%5s | %-15s | %-10s | %-40s |%-10s |%-5s |", m.getKey(), m.getValue().get(0),
+					m.getValue().get(1), m.getValue().get(2), m.getValue().get(3), m.getValue().get(4));
+			System.out.println();
+			System.out.println(
+					"--------------------------------------------------------------------------------------------------");
+		}
+		
+		System.out.println("Le prix total de votre panier est de "+ total + "€");
+		
+	}
 	
+	else System.out.println("Votre panier est vide");
+}
+	
+
+/**Cette méthode permet de valider le panier, c'est-à-dire confirmer l'achat et donc vider le panier, si l'utilisateur confirme le vouloir
+ * 
+ * @param trainingChoices - le panier de formations choisies
+ */
+
+public static void validateCaddy(Map<Integer, ArrayList<String>> trainingChoices) {
+	
+	printCaddyWithTotal(trainingChoices);
+	
+	String answer;
+	
+	do {
+		System.out.println("Souhaitez-vous valider le panier? oui/non");
+	answer = scan.next();
+	}
+	while (!answer.equals("oui") && !answer.equals("non"));
+	
+	if (answer.equals("oui")) {
+		trainingChoices.clear();
+		System.out.println("panier vidé");}
+		//for (HashMap.Entry<Integer, ArrayList<String>> m : trainingChoices.entrySet()) {
+		//trainingChoices.remove(m.getKey(), m.getValue()); }
+		
+		else System.out.println("Opération annulée / Votre panier n'a pas été vidé");
+} 
+
+
+
+/**Cette méthode permet d'appeler le menu
+ * 
+ */
+
 public static void menu() {
 		
 		System.out.println();
+		System.out.println();
 		
 		String menu[] = { "1-Afficher la liste des formations", "2- Ajouter une formation à votre panier", "3-Afficher votre panier",
-				"4-Supprimer une formation","5-Quitter l'application" };
+				"4-Supprimer une formation","5-Afficher votre panier avec le montant total", "6-Valider votre panier"};
 
 		for (int i = 0; i < menu.length; i++)
-			{System.out.println(menu[i]);
-			System.out.println();}
+			{
+			System.out.println(menu[i]);
+			System.out.println();
+			}
 	}
 	
 	
@@ -179,8 +264,10 @@ public static void menu() {
 	
 	
 	int nbMenu;
-	int id=0;
 	
+	System.out.println("       Bonjour et Bienvenue dans mon application FullTrainings");
+	System.out.println();
+	System.out.println("Saisissez le chiffre correspondant à votre choix parmi la liste suivante : ");
 	menu();
 	do { 
 		
@@ -213,13 +300,21 @@ public static void menu() {
 				menu();
 				break;
 				
-		case 5: 
-			break;
+		case 5: printCaddyWithTotal(trainingChoices);
+				menu();
+				break;
+			
+		case 6: validateCaddy(trainingChoices);
+				menu();
+				break;
+				
+		case 7: System.out.println("Au revoir");
+				break;
 
 		default: System.out.println("saisie erronnée");
-				break;
+					break;
 		}
-		  } while (nbMenu!=5);
+		  } while (nbMenu!=7);
 		scan.close();
 			
 		
